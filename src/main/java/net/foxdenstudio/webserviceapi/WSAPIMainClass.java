@@ -2,17 +2,18 @@ package net.foxdenstudio.webserviceapi;
 
 import com.google.inject.Inject;
 import net.foxdenstudio.webserviceapi.annotations.RequestHandler;
+import net.foxdenstudio.webserviceapi.novacula.servers.NovaServer;
+import net.foxdenstudio.webserviceapi.novacula.utils.NovaLogger;
 import net.foxdenstudio.webserviceapi.requests.IWebServiceRequest;
-import net.foxdenstudio.webserviceapi.responses.IWebServiceResponse;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -31,8 +32,16 @@ public class WSAPIMainClass {
 
     HashMap<String, HashMap<String, RequestHandlerData>> pluginAndPathRegistry = new HashMap<>();
 
+    NovaServer novaServer;
+
+    @Listener
+    public void onServerStarting(GameInitializationEvent event) {
+        novaServer = new NovaServer(new NovaLogger());
+        novaServer.start();
+    }
+
+
     public void registerPlugin(String pluginID, String pluginWebPath, Object... classesToRegister) {
-//        pluginAndPathRegistry.put(pluginWebPath, new HashMap<>());
         HashMap<String, RequestHandlerData> tempHashMap = new HashMap<>();
         for (Object object : classesToRegister) {
             Class clazz = object.getClass();
