@@ -1,0 +1,8 @@
+Register OutPlugin and handler instances in OutPlugin
+ - plugin instance
+ - unique path the <host>/PATH/<handler>
+ - classes that have handlers
+
+Methods with anno...
+ - handler name
+ - expected type (html, image, audio)?
