@@ -43,7 +43,6 @@ public class NovaServer {
             logger.logQuiet(NovaLogger.ANSI_BLUE + "\n----------SERVER START FAILED----------\n");
 
             e.printStackTrace();
-            System.exit(1);
         }
 
         if (serverSocket != null) {

@@ -14,6 +14,6 @@ public interface IWebServiceResponse {
     byte[] getByteData();
 
     default String mimeType() {
-        return Mimes.getMimes(".txt");
+        return Mimes.getMimes(".html");
     }
 }

@@ -1,10 +1,10 @@
 package net.foxdenstudio.webserviceapi.webserver;
 
+import com.google.inject.Inject;
 import net.foxdenstudio.webserviceapi.WSAPIMainClass;
-import net.foxdenstudio.webserviceapi.annotations.RequestHandler;
 import net.foxdenstudio.webserviceapi.novacula.server.ClientConnectionThread;
-import net.foxdenstudio.webserviceapi.novacula.server.Mimes;
 import net.foxdenstudio.webserviceapi.requests.IWebServiceRequest;
+import org.slf4j.Logger;
 
 import java.io.*;
 import java.net.Socket;
@@ -17,6 +17,7 @@ import static net.foxdenstudio.webserviceapi.Constants.DEFAULT_INDEX;
  * Project: SpongeForge->FDS-WSAPI
  */
 public class ClientConnectionThreadOverride extends ClientConnectionThread {
+
     WSAPIMainClass wsapiMainClassInstance;
 
     public ClientConnectionThreadOverride(Socket clientSocket, WSAPIMainClass wsapiMainClassInstance, String serverText) {
@@ -54,22 +55,16 @@ public class ClientConnectionThreadOverride extends ClientConnectionThread {
             String pluginName = path.indexOf('/') > -1 ? path.substring(0, path.indexOf('/')).trim() : "DEFPLUG";
             String file = path.indexOf('/') > -1 ? path.substring(path.indexOf('/') + 1).trim() : "DEFPAGE";
 
-            System.err.println("\n\n\n" + tmp2 + " :: " + path + " :: " + file + " :: " + pluginName + " :: " + query + "\n\n\n");
             wsapiMainClassInstance.loadPage(this, pluginName, file, new IWebServiceRequest() {
             });
 
-//            ReadFile(path, "jfreedman.us", outputStream, path);
             outputStream.close();
             inputStream.close();
-            System.out.println("Request processed in: " + (System.currentTimeMillis() - time));
+            wsapiMainClassInstance.getLogger().debug("Request processed in: " + (System.currentTimeMillis() - time));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-    /**
-     * Sending The 200 OK Response to the client = The Request Was accepted
-     */
 
     public void sendHTTPResponseOK(OutputStream outputStreamToClient, String fileMimeType) throws IOException {
 

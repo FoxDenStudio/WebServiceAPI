@@ -43,7 +43,7 @@ public class WSAPIMainClass {
     @Listener
     public void onGameInitializationEvent(GameInitializationEvent event) {
         novaServer = new NovaServerOverride(new NovaLogger(), this);
-        novaServer.start();
+        new Thread(novaServer::start).start();//novaServer.start();
     }
 
     @Listener
@@ -59,8 +59,6 @@ public class WSAPIMainClass {
             Class clazz = object.getClass();
             for (Method method : clazz.getMethods()) {
 
-                System.err.println(method.getName());
-
                 if (method.isAnnotationPresent(RequestHandler.class)) {
                     RequestHandler annotation = method.getAnnotation(RequestHandler.class);
                     String name = annotation.name();
@@ -71,7 +69,7 @@ public class WSAPIMainClass {
 
         pluginAndPathRegistry.put(pluginWebPath, tempHashMap);
 
-        System.out.println("TEST:" + pluginAndPathRegistry);
+        logger.debug("WebData:" + pluginAndPathRegistry);
     }
 
     public void loadPage(ClientConnectionThreadOverride clientConnectionThread, String path, String path2, IWebServiceRequest serviceRequest) {
@@ -80,21 +78,12 @@ public class WSAPIMainClass {
             if (dataHashMap.containsKey(path2)) {
                 RequestHandlerData requestHandlerData = dataHashMap.get(path2);
                 try {
-                    System.out.println("ATTEMPT: " + path + " / " + path2);
                     Object object = requestHandlerData.getMethod().invoke(requestHandlerData.getClassInstance(), serviceRequest);
                     if (object instanceof IWebServiceResponse) {
                         IWebServiceResponse serviceResponse = (IWebServiceResponse) object;
 
-                        /** case of a simple file => read then it's content sent to the client **/
-//                        try (InputStream fileInputStream = new BufferedInputStream(serviceResponse.getData())) {
-
-                        /** calling method sendHTTPResponseOK */
                         clientConnectionThread.sendHTTPResponseOK(clientConnectionThread.getSocket().getOutputStream(), serviceResponse.mimeType());
 
-                        /**
-                         * while is not end of file, method read store number of bytes equivalent to the
-                         * buffer length in buffer variable then it's content is sent by method write
-                         */
                         for (int i = 0; i < serviceResponse.getByteData().length; i++) {
                             clientConnectionThread.getSocket().getOutputStream().write(serviceResponse.getByteData()[i]);
                             clientConnectionThread.getSocket().getOutputStream().flush();
@@ -108,4 +97,7 @@ public class WSAPIMainClass {
         }
     }
 
+    public Logger getLogger() {
+        return logger;
+    }
 }

@@ -32,4 +32,9 @@ public class RequestHandlerData {
     public Method getMethod() {
         return method;
     }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "[reqType=" + requestType.name() + ", class=" + classInstance.getClass().getSimpleName() + ", method=" + method.getName() + "]";
+    }
 }
