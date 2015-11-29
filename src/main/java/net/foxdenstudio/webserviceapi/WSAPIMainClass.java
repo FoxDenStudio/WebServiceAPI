@@ -12,9 +12,11 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
+import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginManager;
+import org.spongepowered.api.service.ProviderExistsException;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -25,7 +27,7 @@ import java.util.HashMap;
  * Created by Joshua Freedman on 11/29/2015.
  * Project: SpongeForge->FDS-WSAPI
  */
-@Plugin(name = "FoxDenStudio - WSAPI", id = "ffds-wsapi")
+@Plugin(name = "FoxDenStudio - WSAPI", id = "fds-wsapi")
 public class WSAPIMainClass {
 
     @Inject
@@ -39,6 +41,14 @@ public class WSAPIMainClass {
 
     NovaServerOverride novaServer;
 
+    @Listener
+    public void onGamePreInitializationEvent(GamePreInitializationEvent event) {
+        try {
+            game.getServiceManager().setProvider(this, IRegistrationService.class, new SimpleRegistrationService());
+        } catch (ProviderExistsException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Listener
     public void onGameInitializationEvent(GameInitializationEvent event) {
