@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import static net.foxdenstudio.webserviceapi.Constants.*;
+
 /**
  * Created by Joshua Freedman on 11/29/2015.
  * Project: SpongeForge->FDS-WSAPI
@@ -30,7 +32,7 @@ public class NovaServer {
 
         logger.logQuiet(NovaLogger.ANSI_BLUE + "\n----------SERVER STARTING------------\n");
         try {
-            serverSocket = new ServerSocket(3080); //TODO From Config
+            serverSocket = new ServerSocket(SERVER_PORT); //TODO From Config
 
             logger.logQuiet(NovaLogger.ANSI_BLUE + "\n----------SERVER IS RUNNING----------\n");
             logger.logQuiet(NovaInfo.getClientInfo());

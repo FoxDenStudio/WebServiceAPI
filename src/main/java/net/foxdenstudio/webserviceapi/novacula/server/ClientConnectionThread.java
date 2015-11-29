@@ -1,8 +1,12 @@
 package net.foxdenstudio.webserviceapi.novacula.server;
 
+import net.foxdenstudio.webserviceapi.WSAPIMainClass;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.Date;
+
+import static net.foxdenstudio.webserviceapi.Constants.*;
 
 /**
  * Created by Joshua Freedman on 11/29/2015.
@@ -84,7 +88,6 @@ public class ClientConnectionThread implements Runnable {
         outputStream.flush();
         outputStream.write("<div align='center'><center></p>\r\n".getBytes());
         outputStream.flush();
-        outputStream.flush();
         outputStream.write("<table border='1' width='700' bgcolor='#004080'><TR>\r\n".getBytes());
         outputStream.write(("<td align='center'><p align='center'><font color='#FFFFFF' size='6'><strong>404 File Not Found</strong></font></p>" +
                 "<p align='left'><font color='#FFFFFF'><strong>The Web Server cannot find the requested file or script" +
@@ -121,7 +124,7 @@ public class ClientConnectionThread implements Runnable {
         outputStreamToClient.flush();
         outputStreamToClient.write(("Date: " + new Date().toString() + "\r\n").getBytes());
         outputStreamToClient.flush();
-        outputStreamToClient.write("Server: AssoudiWebServer1.5r\n".getBytes());
+        outputStreamToClient.write("Server: NovaServer1.5r\n".getBytes());
         outputStreamToClient.flush();
         outputStreamToClient.write("Accept-Ranges: bytes\r\n".getBytes());
         outputStreamToClient.flush();
@@ -135,9 +138,11 @@ public class ClientConnectionThread implements Runnable {
     /**
      * method ReadFile used to either read file,execute cgi program or excute a php script
      */
-    public void ReadFile(String fileName, String serverHostName, OutputStream outputStream, String fileMimeType) throws IOException {
+    public void ReadFile(String fileName, String serverHostName, OutputStream outputStream, String filePath) throws IOException {
 
-        File f = new File("pages" + "\\" + fileName);//TDOD from config
+        System.err.println("WROK: " + fileName + " :: " + filePath);
+
+        File f = new File(BASE_PATH, fileName);//TDOD from config
 
         if (f == null) {
             System.out.println("The File doesn't exist");
@@ -164,7 +169,7 @@ public class ClientConnectionThread implements Runnable {
                         FileInputStream fileInputStream = new FileInputStream(f);
 
                         /** calling method sendHTTPResponseOK */
-                        this.sendHTTPResponseOK(outputStream, /*f,*/ fileMimeType);
+                        this.sendHTTPResponseOK(outputStream, /*f,*/ filePath);
 
                         /**
                          * while is not end of file, method read store number of bytes equivalent to the
