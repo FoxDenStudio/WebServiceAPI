@@ -4,17 +4,14 @@ package net.foxdenstudio.webserviceapi.novacula.server;
  * Created by Joshua Freedman on 11/29/2015.
  * Project: SpongeForge->FDS-WSAPI
  */
-public class Mimes {
-    private int fileExtensionPosition; //contain the file extension position in the file name
-    private String fileExtension; //contain the file extension
-
-    public Mimes() {
-    }
+public abstract class Mimes {
+    private static int fileExtensionPosition; //contain the file extension position in the file name
+    private static String fileExtension; //contain the file extension
 
     /**
      * Method getMimes having as argument the requested file name. *
      */
-    public String getMimes(String fileName) {
+    public static String getMimes(String fileName) {
 
         //seraching for the position of the last point
         fileExtensionPosition = fileName.lastIndexOf(".");

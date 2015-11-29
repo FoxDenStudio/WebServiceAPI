@@ -5,6 +5,9 @@ import net.foxdenstudio.webserviceapi.annotations.RequestHandler;
 import net.foxdenstudio.webserviceapi.novacula.server.NovaServer;
 import net.foxdenstudio.webserviceapi.novacula.utils.NovaLogger;
 import net.foxdenstudio.webserviceapi.requests.IWebServiceRequest;
+import net.foxdenstudio.webserviceapi.responses.IWebServiceResponse;
+import net.foxdenstudio.webserviceapi.webserver.ClientConnectionThreadOverride;
+import net.foxdenstudio.webserviceapi.webserver.NovaServerOverride;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Listener;
@@ -13,6 +16,7 @@ import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginManager;
 
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -33,11 +37,12 @@ public class WSAPIMainClass {
 
     HashMap<String, HashMap<String, RequestHandlerData>> pluginAndPathRegistry = new HashMap<>();
 
-    NovaServer novaServer;
+    NovaServerOverride novaServer;
+
 
     @Listener
     public void onGameInitializationEvent(GameInitializationEvent event) {
-        novaServer = new NovaServer(new NovaLogger());
+        novaServer = new NovaServerOverride(new NovaLogger(), this);
         novaServer.start();
     }
 
@@ -53,14 +58,15 @@ public class WSAPIMainClass {
         for (Object object : classesToRegister) {
             Class clazz = object.getClass();
             for (Method method : clazz.getMethods()) {
+
+                System.err.println(method.getName());
+
                 if (method.isAnnotationPresent(RequestHandler.class)) {
                     RequestHandler annotation = method.getAnnotation(RequestHandler.class);
                     String name = annotation.name();
                     tempHashMap.put(name, new RequestHandlerData(annotation.requestType(), object, method));
                 }
-                method = null;
             }
-            clazz = null;
         }
 
         pluginAndPathRegistry.put(pluginWebPath, tempHashMap);
@@ -68,15 +74,34 @@ public class WSAPIMainClass {
         System.out.println("TEST:" + pluginAndPathRegistry);
     }
 
-    public void callTest(String path, String path2, IWebServiceRequest serviceRequest) {
+    public void loadPage(ClientConnectionThreadOverride clientConnectionThread, String path, String path2, IWebServiceRequest serviceRequest) {
         if (pluginAndPathRegistry.containsKey(path)) {
             HashMap<String, RequestHandlerData> dataHashMap = pluginAndPathRegistry.get(path);
             if (dataHashMap.containsKey(path2)) {
                 RequestHandlerData requestHandlerData = dataHashMap.get(path2);
                 try {
                     System.out.println("ATTEMPT: " + path + " / " + path2);
-                    requestHandlerData.getMethod().invoke(requestHandlerData.getClassInstance(), serviceRequest);
-                } catch (IllegalAccessException | InvocationTargetException e) {
+                    Object object = requestHandlerData.getMethod().invoke(requestHandlerData.getClassInstance(), serviceRequest);
+                    if (object instanceof IWebServiceResponse) {
+                        IWebServiceResponse serviceResponse = (IWebServiceResponse) object;
+
+                        /** case of a simple file => read then it's content sent to the client **/
+//                        try (InputStream fileInputStream = new BufferedInputStream(serviceResponse.getData())) {
+
+                        /** calling method sendHTTPResponseOK */
+                        clientConnectionThread.sendHTTPResponseOK(clientConnectionThread.getSocket().getOutputStream(), serviceResponse.mimeType());
+
+                        /**
+                         * while is not end of file, method read store number of bytes equivalent to the
+                         * buffer length in buffer variable then it's content is sent by method write
+                         */
+                        for (int i = 0; i < serviceResponse.getByteData().length; i++) {
+                            clientConnectionThread.getSocket().getOutputStream().write(serviceResponse.getByteData()[i]);
+                            clientConnectionThread.getSocket().getOutputStream().flush();
+                        }
+
+                    }
+                } catch (IllegalAccessException | InvocationTargetException | IOException e) {
                     e.printStackTrace();
                 }
             }

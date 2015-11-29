@@ -1,12 +1,11 @@
 package net.foxdenstudio.webserviceapi.novacula.server;
 
-import net.foxdenstudio.webserviceapi.WSAPIMainClass;
-
 import java.io.*;
 import java.net.Socket;
 import java.util.Date;
 
-import static net.foxdenstudio.webserviceapi.Constants.*;
+import static net.foxdenstudio.webserviceapi.Constants.BASE_PATH;
+import static net.foxdenstudio.webserviceapi.Constants.DEFAULT_INDEX;
 
 /**
  * Created by Joshua Freedman on 11/29/2015.
@@ -17,8 +16,8 @@ public class ClientConnectionThread implements Runnable {
     protected Socket socket = null;
     protected String serverText = null;
     private String fileMimeType = ""; //fileMimeType is used to hold the Requested File mime type
-    private int nbRead;//Hold the number of bytes readed
-    private byte[] buffer;//Buffer contain data readed from file.
+    protected int nbRead;//Hold the number of bytes readed
+    protected byte[] buffer;//Buffer contain data readed from file.
 
     private final String mailto = "npjoshf@gmail.com";
 
@@ -56,7 +55,7 @@ public class ClientConnectionThread implements Runnable {
             }
 
             String path = tmp2.substring(start + 2, end);
-            path = path.trim().equalsIgnoreCase("") ? "index.php" : path;
+            path = path.trim().equalsIgnoreCase("") ? DEFAULT_INDEX : path;
 
 //            output.write(("HTTP/1.1 200 OK\n\nCCT: " + this.serverText + " - " + time + "\n\n").getBytes());
 //            sendHTTPResponseOK(output,".html");
@@ -108,8 +107,7 @@ public class ClientConnectionThread implements Runnable {
 
         /**Test the file extension, then get the appropriate mime type **/
 
-        Mimes mim = new Mimes();
-        fileMimeType = mim.getMimes(fileName);
+        fileMimeType = Mimes.getMimes(fileName);
 
         /** Sending a Http Response of type
          *
@@ -186,5 +184,34 @@ public class ClientConnectionThread implements Runnable {
                 }
             }
         }
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public String getServerText() {
+        return serverText;
+    }
+
+    public String getFileMimeType() {
+        return fileMimeType;
+    }
+
+    public int getNbRead() {
+        return nbRead;
+    }
+
+    public byte[] getBuffer() {
+        return buffer;
+    }
+
+    public String getMailto() {
+        return mailto;
+    }
+
+    public int setNbRead(int read) {
+        nbRead = read;
+        return nbRead;
     }
 }

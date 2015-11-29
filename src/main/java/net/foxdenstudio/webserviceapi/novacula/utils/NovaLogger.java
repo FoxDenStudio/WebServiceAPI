@@ -71,7 +71,7 @@ public class NovaLogger {
         if (message != null) {
             String msg = "[" + sdf.format(this.time.getTime()) + "] " + prefix + message + suffix + cleanupCode;
             log.add(msg);
-            System.out.println(msg);
+//            System.out.println(msg);
         }
     }
 
@@ -79,7 +79,7 @@ public class NovaLogger {
         if (message != null) {
             String msg = message + cleanupCode;
             log.add(msg);
-            System.out.println(msg);
+//            System.out.println(msg);
         }
     }
 
@@ -87,7 +87,7 @@ public class NovaLogger {
         if (message != null) {
             String msg = "[" + sdf.format(this.time.getTime()) + "] " + ERROR + message + ERROR_SUFFIX + cleanupCode;
             log.add(msg);
-            System.out.println(ANSI_RED + msg);
+//            System.out.println(ANSI_RED + msg);
         }
     }
 
@@ -95,7 +95,7 @@ public class NovaLogger {
         log.add(CLEAR_LOG);
         for (int i = 1; i < 50; i++)
             System.out.print("\n");
-        System.out.println(CLEAR_LOG);
+//        System.out.println(CLEAR_LOG);
     }
 
     public void logClear(int lines) {
