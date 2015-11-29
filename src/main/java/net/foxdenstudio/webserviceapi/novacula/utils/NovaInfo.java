@@ -15,7 +15,7 @@ public class NovaInfo {
         String freeMemory = "[+] Free memory: " + Runtime.getRuntime().freeMemory();
         String availibleMemory = "[+] Total memory available to JVM: " + Runtime.getRuntime().totalMemory();
 
-        return NovaLogger.ANSI_GREEN + "The Server has...\n" + NovaLogger.ANSI_CYAN + "\t" + processors + " cores.\n\t" + maxMemory + " Bytes.\n\t" + freeMemory + " Bytes.\n\t" + availibleMemory + " Bytes";
+        return NovaLogger.ANSI_GREEN + "The Server has...\n" + NovaLogger.ANSI_CYAN + "\t" + processors + " cores.\n\t" + maxMemory + " Bytes.\n\t" + freeMemory + " Bytes.\n\t" + availibleMemory + " Bytes\n";
     }
 
     public static String getFileInfo() {
@@ -26,7 +26,7 @@ public class NovaInfo {
             info += "\t[+] File system root: " + root.getAbsolutePath() + "\n";
             info += "\t[+] Total space: " + root.getTotalSpace() + " Bytes.\n";
             info += "\t[+] Free space: " + root.getFreeSpace() + " Bytes.\n";
-            info += "\t[+] Usable space: " + root.getUsableSpace() + " Bytes";
+            info += "\t[+] Usable space: " + root.getUsableSpace() + " Bytes\n";
         }
         return info;
     }

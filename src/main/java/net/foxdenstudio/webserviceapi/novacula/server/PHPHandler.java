@@ -1,4 +1,4 @@
-package net.foxdenstudio.webserviceapi.novacula.servers;
+package net.foxdenstudio.webserviceapi.novacula.server;
 
 import java.io.*;
 

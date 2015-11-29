@@ -1,4 +1,4 @@
-package net.foxdenstudio.webserviceapi.novacula.servers;
+package net.foxdenstudio.webserviceapi.novacula.server;
 
 import java.io.*;
 import java.net.Socket;
@@ -69,7 +69,7 @@ public class ClientConnectionThread implements Runnable {
 
     /**
      * Handling The ERROR 404 Not Found (occur when a file or a directory
-     * doesn't exist under the web servers
+     * doesn't exist under the web server
      */
 
     void FileNotFound(OutputStream outputStream, String serverHostName) throws IOException {

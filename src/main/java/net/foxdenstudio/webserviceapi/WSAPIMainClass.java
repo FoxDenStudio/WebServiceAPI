@@ -2,13 +2,14 @@ package net.foxdenstudio.webserviceapi;
 
 import com.google.inject.Inject;
 import net.foxdenstudio.webserviceapi.annotations.RequestHandler;
-import net.foxdenstudio.webserviceapi.novacula.servers.NovaServer;
+import net.foxdenstudio.webserviceapi.novacula.server.NovaServer;
 import net.foxdenstudio.webserviceapi.novacula.utils.NovaLogger;
 import net.foxdenstudio.webserviceapi.requests.IWebServiceRequest;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
+import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginManager;
 
@@ -35,9 +36,15 @@ public class WSAPIMainClass {
     NovaServer novaServer;
 
     @Listener
-    public void onServerStarting(GameInitializationEvent event) {
+    public void onGameInitializationEvent(GameInitializationEvent event) {
         novaServer = new NovaServer(new NovaLogger());
         novaServer.start();
+    }
+
+    @Listener
+    public void onGameServerStoppingEvent(GameStoppingEvent event) {
+        novaServer.stop();
+        novaServer.getLogger().saveLog();
     }
 
 

@@ -1,5 +1,7 @@
 package net.foxdenstudio.webserviceapi.novacula.utils;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -105,6 +107,13 @@ public class NovaLogger {
 
     public boolean saveLog() {
         //TODO save the log with the NovaFile.Save() method
+        try (FileWriter writer = new FileWriter("NovaOutputLog.log")) {
+            for (String str : log) {
+                writer.write(str);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return true;
     }
 

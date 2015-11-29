@@ -1,4 +1,4 @@
-package net.foxdenstudio.webserviceapi.novacula.servers;
+package net.foxdenstudio.webserviceapi.novacula.server;
 
 import net.foxdenstudio.webserviceapi.novacula.utils.NovaInfo;
 import net.foxdenstudio.webserviceapi.novacula.utils.NovaLogger;
@@ -28,15 +28,15 @@ public class NovaServer {
             this.runningThread = Thread.currentThread();
         }
 
-        logger.logQuiet(NovaLogger.ANSI_BLUE + "\n----------SERVER STARTING----------\n");
+        logger.logQuiet(NovaLogger.ANSI_BLUE + "\n----------SERVER STARTING------------\n");
         try {
             serverSocket = new ServerSocket(3080); //TODO From Config
 
             logger.logQuiet(NovaLogger.ANSI_BLUE + "\n----------SERVER IS RUNNING----------\n");
             logger.logQuiet(NovaInfo.getClientInfo());
             logger.logQuiet(NovaInfo.getFileInfo());
-            logger.logClear();
-            logger.log("Log so far:" + logger.getLog());
+//            logger.logClear();
+//            logger.log("Log so far:" + logger.getLog());
         } catch (IOException e) {
             logger.logQuiet(NovaLogger.ANSI_BLUE + "\n----------SERVER START FAILED----------\n");
 
@@ -72,7 +72,7 @@ public class NovaServer {
         try {
             this.serverSocket.close();
         } catch (IOException e) {
-            throw new RuntimeException("Error closing servers", e);
+            throw new RuntimeException("Error closing server", e);
         }
     }
 

@@ -1,4 +1,4 @@
-package net.foxdenstudio.webserviceapi.novacula.servers;
+package net.foxdenstudio.webserviceapi.novacula.server;
 
 /**
  * Created by Joshua Freedman on 11/29/2015.
