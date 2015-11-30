@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import java.io.*;
 import java.net.Socket;
 import java.util.Date;
+import java.util.HashMap;
 
 import static net.foxdenstudio.webserviceapi.Constants.DEFAULT_INDEX;
 
@@ -55,8 +56,30 @@ public class ClientConnectionThreadOverride extends ClientConnectionThread {
             String pluginName = path.indexOf('/') > -1 ? path.substring(0, path.indexOf('/')).trim() : "DEFPLUG";
             String file = path.indexOf('/') > -1 ? path.substring(path.indexOf('/') + 1).trim() : "DEFPAGE";
 
-            wsapiMainClassInstance.loadPage(this, pluginName, file, new IWebServiceRequest() {
-            });
+            HashMap<String, String> tempMap = new HashMap<>();
+
+            if (!query.equalsIgnoreCase("")) {
+                if (query.indexOf('&') > -1) {
+                    String[] qStringArr = query.split("&");
+                    for (String elemString : qStringArr) {
+                        if (elemString.indexOf('=') > -1) {
+                            String[] qElemParts = elemString.split("=");
+                            tempMap.put(qElemParts[0], qElemParts[1]);
+                        } else {
+                            tempMap.put(elemString, "true");
+                        }
+                    }
+                } else {
+                    if (query.indexOf('=') > -1) {
+                        String[] qElemParts = query.split("=");
+                        tempMap.put(qElemParts[0], qElemParts[1]);
+                    } else {
+                        tempMap.put(query, "true");
+                    }
+                }
+            }
+
+            wsapiMainClassInstance.loadPage(this, pluginName, file, () -> tempMap);
 
             outputStream.close();
             inputStream.close();
