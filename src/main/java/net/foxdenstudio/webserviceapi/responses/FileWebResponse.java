@@ -2,12 +2,11 @@ package net.foxdenstudio.webserviceapi.responses;
 
 import com.google.common.io.ByteStreams;
 import net.foxdenstudio.webserviceapi.novacula.server.Mimes;
-import org.spongepowered.api.util.command.args.parsing.InputTokenizer;
 
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by Joshua Freedman on 11/29/2015.
@@ -38,11 +37,6 @@ public class FileWebResponse implements IWebServiceResponse {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        try {
-//            mimeType = Mimes.getMimes(resource.toURL().toExternalForm());
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        }
         try {
             resource.close();
         } catch (IOException e) {
