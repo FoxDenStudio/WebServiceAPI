@@ -18,6 +18,8 @@ import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginManager;
 import org.spongepowered.api.service.ProviderExistsException;
+import org.spongepowered.api.service.scheduler.Task;
+import org.spongepowered.common.service.scheduler.SpongeScheduler;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -25,6 +27,8 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by Joshua Freedman on 11/29/2015.
@@ -44,6 +48,10 @@ public class WSAPIMainClass {
 
     NovaServerOverride novaServer;
 
+    Task checkRequests;
+
+    public static final BlockingQueue<Runnable> requestQueue = new LinkedBlockingQueue<>();
+
     @Listener
     public void onGamePreInitializationEvent(GamePreInitializationEvent event) {
         try {
@@ -51,6 +59,14 @@ public class WSAPIMainClass {
         } catch (ProviderExistsException e) {
             e.printStackTrace();
         }
+        checkRequests = SpongeScheduler.getInstance().createTaskBuilder().execute((task) -> {
+            try {
+                requestQueue.take().run();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).name("CheckRequestsTask").delayTicks(10).intervalTicks(1).submit(this);
+
     }
 
     @Listener

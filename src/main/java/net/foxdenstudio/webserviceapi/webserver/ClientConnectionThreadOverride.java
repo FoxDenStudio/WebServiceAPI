@@ -78,12 +78,19 @@ public class ClientConnectionThreadOverride extends ClientConnectionThread {
                     }
                 }
             }
+            final ClientConnectionThreadOverride ti = this;
 
-            wsapiMainClassInstance.loadPage(this, pluginName, file, () -> tempMap);
+            WSAPIMainClass.requestQueue.add(() -> {
+                wsapiMainClassInstance.loadPage(ti, pluginName, file, () -> tempMap);
+                try {
+                    outputStream.close();
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                wsapiMainClassInstance.getLogger().debug("Request processed in: " + (System.currentTimeMillis() - time));
+            });
 
-            outputStream.close();
-            inputStream.close();
-            wsapiMainClassInstance.getLogger().debug("Request processed in: " + (System.currentTimeMillis() - time));
         } catch (Exception e) {
             e.printStackTrace();
         }

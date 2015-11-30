@@ -28,11 +28,6 @@ public class FileWebResponse implements IWebServiceResponse {
 
     public FileWebResponse(InputStream resource) {
         try {
-            System.out.println("RES AVAL : " + resource.available());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
             byteData = ByteStreams.toByteArray(resource);
         } catch (IOException e) {
             e.printStackTrace();
