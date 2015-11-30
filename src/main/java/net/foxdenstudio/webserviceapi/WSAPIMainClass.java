@@ -16,7 +16,6 @@ import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.plugin.PluginManager;
 import org.spongepowered.api.service.ProviderExistsException;
 import org.spongepowered.api.service.scheduler.SchedulerService;
@@ -26,10 +25,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.function.Consumer;
 
 /**
  * Created by Joshua Freedman on 11/29/2015.
@@ -114,7 +111,7 @@ public class WSAPIMainClass {
 
     public void loadPage(ClientConnectionThreadOverride clientConnectionThread, String path, String path2, IWebServiceRequest serviceRequest) {
 
-        if (path.equalsIgnoreCase("DEFPLUG") && path2.equalsIgnoreCase("DEFPAGE")) {
+        if (path.equalsIgnoreCase("DEFPLUG") && path2.equalsIgnoreCase("home")) {
 //            https://travis-ci.org/FoxDenStudio/WebServiceAPI.svg?branch=master
             try {
                 ClassLoader classLoader = getClass().getClassLoader();
