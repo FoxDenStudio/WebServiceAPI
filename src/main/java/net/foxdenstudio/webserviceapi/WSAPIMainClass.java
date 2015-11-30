@@ -2,9 +2,9 @@ package net.foxdenstudio.webserviceapi;
 
 import com.google.inject.Inject;
 import net.foxdenstudio.webserviceapi.annotations.RequestHandler;
-import net.foxdenstudio.webserviceapi.novacula.server.NovaServer;
 import net.foxdenstudio.webserviceapi.novacula.utils.NovaLogger;
 import net.foxdenstudio.webserviceapi.requests.IWebServiceRequest;
+import net.foxdenstudio.webserviceapi.responses.FileWebResponse;
 import net.foxdenstudio.webserviceapi.responses.IWebServiceResponse;
 import net.foxdenstudio.webserviceapi.webserver.ClientConnectionThreadOverride;
 import net.foxdenstudio.webserviceapi.webserver.NovaServerOverride;
@@ -22,6 +22,8 @@ import org.spongepowered.api.service.ProviderExistsException;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.HashMap;
 
 /**
@@ -89,6 +91,33 @@ public class WSAPIMainClass {
     }
 
     public void loadPage(ClientConnectionThreadOverride clientConnectionThread, String path, String path2, IWebServiceRequest serviceRequest) {
+
+        if (path.equalsIgnoreCase("DEFPLUG") && path2.equalsIgnoreCase("DEFPAGE")) {
+//            https://travis-ci.org/FoxDenStudio/WebServiceAPI.svg?branch=master
+            try {
+                ClassLoader classLoader = getClass().getClassLoader();
+
+                Enumeration<URL> resources = classLoader.getResources("");
+
+                while (resources.hasMoreElements()) {
+                    System.out.println("YAY: " + resources.nextElement().toExternalForm());
+                }
+
+                IWebServiceResponse serviceResponse = new FileWebResponse(classLoader.getResourceAsStream("BaseDoc.html"));
+
+                clientConnectionThread.sendHTTPResponseOK(clientConnectionThread.getSocket().getOutputStream(), serviceResponse.mimeType());
+
+                for (int i = 0; i < serviceResponse.getByteData().length; i++) {
+                    clientConnectionThread.getSocket().getOutputStream().write(serviceResponse.getByteData()[i]);
+                    clientConnectionThread.getSocket().getOutputStream().flush();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return;
+        }
+
         if (pluginAndPathRegistry.containsKey(path)) {
             HashMap<String, RequestHandlerData> dataHashMap = pluginAndPathRegistry.get(path);
             if (dataHashMap.containsKey(path2)) {

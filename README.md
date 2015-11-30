@@ -37,9 +37,10 @@ The first thing you should do is add a soft dependency to the `fds-wsapi` plugin
 
 Next,you need to get the service and register your plugin in a `GameInitializationEvent` (or similar).
 
-`WSAPIMainClass wsapiMainClass = (WSAPIMainClass) pluginManager.getPlugin("fds-wsapi").get().getInstance();`
-
-`wsapiMainClass.registerPlugin("ffds-wsapi-test", "test", new TestHandlerClass());`
+```java
+WSAPIMainClass wsapiMainClass = (WSAPIMainClass) pluginManager.getPlugin("fds-wsapi").get().getInstance();
+wsapiMainClass.registerPlugin("ffds-wsapi-test", "test", new TestHandlerClass());
+```
 
 An example of this code in action can be found inside the WebServiceAPI-Test directory.
 
