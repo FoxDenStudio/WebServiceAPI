@@ -19,6 +19,7 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.plugin.PluginManager;
 import org.spongepowered.api.service.ProviderExistsException;
+import org.spongepowered.api.service.scheduler.SchedulerService;
 import org.spongepowered.api.service.scheduler.Task;
 
 import java.io.IOException;
@@ -62,60 +63,15 @@ public class WSAPIMainClass {
             }
 
             //API ONLY
-            checkRequests = new Task() {
-                @Override
-                public UUID getUniqueId() {
-                    return UUID.randomUUID();
+            SchedulerService schedulerService = game.getScheduler();
+            Task.Builder taskBuilder = schedulerService.createTaskBuilder();
+            taskBuilder.execute((task) -> {
+                try {
+                    requestQueue.take().run();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-
-                @Override
-                public String getName() {
-                    return "CheckRequestTask";
-                }
-
-                @Override
-                public PluginContainer getOwner() {
-                    return pluginManager.getPlugin("fds-wsapi").get();
-                }
-
-                @Override
-                public long getDelay() {
-                    return 10;
-                }
-
-                @Override
-                public long getInterval() {
-                    return 0;
-                }
-
-                @Override
-                public boolean cancel() {
-                    return false;
-                }
-
-                @Override
-                public Consumer<Task> getConsumer() {
-                    return task -> {
-                        try {
-                            requestQueue.take().run();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    };
-                }
-
-                @Override
-                public boolean isAsynchronous() {
-                    return false;
-                }
-            };
-//            SpongeScheduler.getInstance().createTaskBuilder().execute((task) -> {
-//                try {
-//                    requestQueue.take().run();
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }).name("CheckRequestsTask").delayTicks(10).intervalTicks(1).submit(this);
+            }).name("FDS-WSAPI - CheckRequestsTask").delayTicks(10).intervalTicks(1).submit(this);
         }
     }
 
