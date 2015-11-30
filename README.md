@@ -41,6 +41,8 @@ Next,you need to get the service and register your plugin in a `GameInitializati
 
 `wsapiMainClass.registerPlugin("ffds-wsapi-test", "test", new TestHandlerClass());`
 
+An example of this code in action can be found inside the WebServiceAPI-Test directory.
+
 
 # PLEASE REMEMBER
 This is still in BETA development, it will change a lot.....
