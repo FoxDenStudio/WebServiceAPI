@@ -16,19 +16,19 @@ import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.plugin.PluginManager;
 import org.spongepowered.api.service.ProviderExistsException;
 import org.spongepowered.api.service.scheduler.Task;
-import org.spongepowered.common.service.scheduler.SpongeScheduler;
 
-import java.io.*;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
-import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.Consumer;
 
 /**
  * Created by Joshua Freedman on 11/29/2015.
@@ -54,19 +54,69 @@ public class WSAPIMainClass {
 
     @Listener
     public void onGamePreInitializationEvent(GamePreInitializationEvent event) {
-        try {
-            game.getServiceManager().setProvider(this, IRegistrationService.class, new SimpleRegistrationService());
-        } catch (ProviderExistsException e) {
-            e.printStackTrace();
-        }
-        checkRequests = SpongeScheduler.getInstance().createTaskBuilder().execute((task) -> {
+        if (game.getPlatform().getType() == Platform.Type.SERVER) {
             try {
-                requestQueue.take().run();
-            } catch (InterruptedException e) {
+                game.getServiceManager().setProvider(this, IRegistrationService.class, new SimpleRegistrationService());
+            } catch (ProviderExistsException e) {
                 e.printStackTrace();
             }
-        }).name("CheckRequestsTask").delayTicks(10).intervalTicks(1).submit(this);
 
+            //API ONLY
+            checkRequests = new Task() {
+                @Override
+                public UUID getUniqueId() {
+                    return UUID.randomUUID();
+                }
+
+                @Override
+                public String getName() {
+                    return "CheckRequestTask";
+                }
+
+                @Override
+                public PluginContainer getOwner() {
+                    return pluginManager.getPlugin("fds-wsapi").get();
+                }
+
+                @Override
+                public long getDelay() {
+                    return 10;
+                }
+
+                @Override
+                public long getInterval() {
+                    return 0;
+                }
+
+                @Override
+                public boolean cancel() {
+                    return false;
+                }
+
+                @Override
+                public Consumer<Task> getConsumer() {
+                    return task -> {
+                        try {
+                            requestQueue.take().run();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    };
+                }
+
+                @Override
+                public boolean isAsynchronous() {
+                    return false;
+                }
+            };
+//            SpongeScheduler.getInstance().createTaskBuilder().execute((task) -> {
+//                try {
+//                    requestQueue.take().run();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }).name("CheckRequestsTask").delayTicks(10).intervalTicks(1).submit(this);
+        }
     }
 
     @Listener
