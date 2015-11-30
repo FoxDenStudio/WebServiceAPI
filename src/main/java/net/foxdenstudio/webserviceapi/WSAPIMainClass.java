@@ -96,13 +96,6 @@ public class WSAPIMainClass {
 //            https://travis-ci.org/FoxDenStudio/WebServiceAPI.svg?branch=master
             try {
                 ClassLoader classLoader = getClass().getClassLoader();
-
-                Enumeration<URL> resources = classLoader.getResources("");
-
-                while (resources.hasMoreElements()) {
-                    System.out.println("YAY: " + resources.nextElement().toExternalForm());
-                }
-
                 IWebServiceResponse serviceResponse = new FileWebResponse(classLoader.getResourceAsStream("BaseDoc.html"));
 
                 clientConnectionThread.sendHTTPResponseOK(clientConnectionThread.getSocket().getOutputStream(), serviceResponse.mimeType());
