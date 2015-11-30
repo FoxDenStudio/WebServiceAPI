@@ -10,6 +10,7 @@ import net.foxdenstudio.webserviceapi.webserver.ClientConnectionThreadOverride;
 import net.foxdenstudio.webserviceapi.webserver.NovaServerOverride;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Platform;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
@@ -52,14 +53,19 @@ public class WSAPIMainClass {
 
     @Listener
     public void onGameInitializationEvent(GameInitializationEvent event) {
-        novaServer = new NovaServerOverride(new NovaLogger(), this);
-        new Thread(novaServer::start).start();//novaServer.start();
+        if (game.getPlatform().getType() == Platform.Type.SERVER) {
+            novaServer = new NovaServerOverride(new NovaLogger(), this);
+            new Thread(novaServer::start).start();//novaServer.start();
+        }
     }
 
     @Listener
     public void onGameServerStoppingEvent(GameStoppingEvent event) {
-        novaServer.stop();
-        novaServer.getLogger().saveLog();
+        if (game.getPlatform().getType() == Platform.Type.SERVER) {
+
+            novaServer.stop();
+            novaServer.getLogger().saveLog();
+        }
     }
 
 
