@@ -54,7 +54,7 @@ public class ClientConnectionThreadOverride extends ClientConnectionThread {
             String query = path.indexOf('?') > -1 ? path.substring(path.indexOf('?') + 1).trim() : "";
             path = path.indexOf('?') > -1 ? path.substring(0, path.indexOf('?')) : path;
             String pluginName = path.indexOf('/') > -1 ? path.substring(0, path.indexOf('/')).trim() : "DEFPLUG";
-            String file = path.indexOf('/') > -1 ? path.substring(path.indexOf('/') + 1).trim() : "home";
+            String file = path.indexOf('/') > -1 ? path.substring(path.indexOf('/') + 1).trim() : "home"; //TODO change path so that file checks if not there or ret home
 
             HashMap<String, String> tempMap = new HashMap<>();
 

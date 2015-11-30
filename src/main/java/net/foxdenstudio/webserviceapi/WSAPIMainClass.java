@@ -18,7 +18,6 @@ import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginManager;
 import org.spongepowered.api.service.ProviderExistsException;
-import org.spongepowered.api.service.scheduler.SchedulerService;
 import org.spongepowered.api.service.scheduler.Task;
 
 import java.io.IOException;
@@ -27,6 +26,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Joshua Freedman on 11/29/2015.
@@ -46,8 +46,6 @@ public class WSAPIMainClass {
 
     NovaServerOverride novaServer;
 
-    Task checkRequests;
-
     public static final BlockingQueue<Runnable> requestQueue = new LinkedBlockingQueue<>();
 
     @Listener
@@ -59,16 +57,13 @@ public class WSAPIMainClass {
                 e.printStackTrace();
             }
 
-            //API ONLY
-            SchedulerService schedulerService = game.getScheduler();
-            Task.Builder taskBuilder = schedulerService.createTaskBuilder();
-            taskBuilder.execute((task) -> {
+            game.getScheduler().createTaskBuilder().execute((task) -> {
                 try {
                     requestQueue.take().run();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }).name("FDS-WSAPI - CheckRequestsTask").delayTicks(10).intervalTicks(1).submit(this);
+            }).name("FDS-WSAPI - CheckRequestsTask").delayTicks(10).interval(1, TimeUnit.MICROSECONDS).submit(this);
         }
     }
 

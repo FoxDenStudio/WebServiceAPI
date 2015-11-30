@@ -12,7 +12,7 @@ import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginManager;
 
-@Plugin(id = "fds-wsapi-test", name = "FoxDenStudio - WSAPI - Test", dependencies = "required-after:fds-wsapi")
+@Plugin(id = "fds-wsapi-test", name = "FoxDenStudio - WSAPI - Test", dependencies = "after:fds-wsapi")
 public class TestMainClass {
 
     @Inject
