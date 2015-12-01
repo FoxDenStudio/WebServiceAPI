@@ -43,5 +43,7 @@ public interface IWebServiceRequest {
      */
     HashMap<String, String> queryData();
 
-    RequestHandler.RequestType getExpectedType();
+    default RequestHandler.RequestType getExpectedType() {
+        return RequestHandler.RequestType.CONTENT;
+    }
 }
