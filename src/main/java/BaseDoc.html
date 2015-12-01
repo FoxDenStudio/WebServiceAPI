@@ -4381,7 +4381,7 @@
 <p>Next,you need to get the service and register your plugin in a <code>GameInitializationEvent</code> (or similar).</p>
 <pre><code class="language-java">WSAPIMainClass wsapiMainClass = (WSAPIMainClass) pluginManager.getPlugin(<span
         class="hljs-string">"fds-wsapi"</span>).get().getInstance();
-wsapiMainClass.registerPlugin(<span class="hljs-string">"ffds-wsapi-test"</span>, <span
+    wsapiMainClass.registerPlugin(<span class="hljs-string">"fds-wsapi-test"</span>, <span
             class="hljs-string">"test"</span>, <span class="hljs-keyword">new</span> TestHandlerClass());
 </code></pre>
 <p>An example of this code in action can be found inside the WebServiceAPI-Test directory.</p>

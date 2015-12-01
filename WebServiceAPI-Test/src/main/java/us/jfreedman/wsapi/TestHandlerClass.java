@@ -1,6 +1,7 @@
 package us.jfreedman.wsapi;
 
 import net.foxdenstudio.webserviceapi.requests.IWebServiceRequest;
+import net.foxdenstudio.webserviceapi.responses.CombinedWebResponse;
 import net.foxdenstudio.webserviceapi.responses.FileWebResponse;
 import net.foxdenstudio.webserviceapi.responses.IWebServiceResponse;
 import net.foxdenstudio.webserviceapi.annotations.RequestHandler;
@@ -23,7 +24,7 @@ public class TestHandlerClass {
 
     @RequestHandler(name = "test", requestType = RequestHandler.RequestType.CONTENT)
     public IWebServiceResponse pageTest(IWebServiceRequest webServiceRequest) throws IOException {
-        return new RedirectWebResponse(new URL("http://google.com"));
+        return new CombinedWebResponse(new RedirectWebResponse(new URL("http://google.com")));
     }
 
     @RequestHandler(name = "lol", requestType = RequestHandler.RequestType.CONTENT)

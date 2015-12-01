@@ -59,8 +59,8 @@ public class WSAPIMainClass {
 
     @Listener
     public void onGamePreInitializationEvent(GamePreInitializationEvent event) {
-
         if (game.getPlatform().getType() == Platform.Type.SERVER) {
+
             try {
                 game.getServiceManager().setProvider(this, IRegistrationService.class, new SimpleRegistrationService());
             } catch (ProviderExistsException e) {
@@ -73,7 +73,7 @@ public class WSAPIMainClass {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }).name("FDS-WSAPI - CheckRequestsTask").delayTicks(10).interval(1, TimeUnit.MICROSECONDS).submit(this);
+            }).name("FDS-WSAPI - CheckRequestsTask").delayTicks(10).interval(1, TimeUnit.MILLISECONDS).submit(this);
         }
     }
 
@@ -88,7 +88,6 @@ public class WSAPIMainClass {
     @Listener
     public void onGameServerStoppingEvent(GameStoppingEvent event) {
         if (game.getPlatform().getType() == Platform.Type.SERVER) {
-
             novaServer.stop();
             novaServer.getLogger().saveLog();
         }
@@ -104,8 +103,10 @@ public class WSAPIMainClass {
      * @param classesToRegister Instances of classes that contain the @RequestHandler methods.
      */
     public void registerPlugin(String pluginID, String pluginWebPath, Object... classesToRegister) {
+
         HashMap<String, RequestHandlerData> tempHashMap = new HashMap<>();
         for (Object object : classesToRegister) {
+
             Class clazz = object.getClass();
             for (Method method : clazz.getMethods()) {
 
@@ -135,7 +136,7 @@ public class WSAPIMainClass {
     public void loadPage(ClientConnectionThreadOverride clientConnectionThread, String path, String path2, IWebServiceRequest serviceRequest) {
 
         if (path.equalsIgnoreCase("DEFPLUG") && path2.equalsIgnoreCase("home")) {
-//            https://travis-ci.org/FoxDenStudio/WebServiceAPI.svg?branch=master
+
             try {
                 ClassLoader classLoader = getClass().getClassLoader();
                 IWebServiceResponse serviceResponse = new FileWebResponse(classLoader.getResourceAsStream("BaseDoc.html"));
@@ -154,12 +155,16 @@ public class WSAPIMainClass {
         }
 
         if (pluginAndPathRegistry.containsKey(path)) {
+
             HashMap<String, RequestHandlerData> dataHashMap = pluginAndPathRegistry.get(path);
             if (dataHashMap.containsKey(path2)) {
+
                 RequestHandlerData requestHandlerData = dataHashMap.get(path2);
+
                 try {
                     Object object = requestHandlerData.getMethod().invoke(requestHandlerData.getClassInstance(), serviceRequest);
                     if (object instanceof IWebServiceResponse) {
+
                         IWebServiceResponse serviceResponse = (IWebServiceResponse) object;
 
                         clientConnectionThread.sendHTTPResponseOK(clientConnectionThread.getSocket().getOutputStream(), serviceResponse.mimeType());
@@ -168,7 +173,6 @@ public class WSAPIMainClass {
                             clientConnectionThread.getSocket().getOutputStream().write(serviceResponse.getByteData()[i]);
                             clientConnectionThread.getSocket().getOutputStream().flush();
                         }
-
                     }
                 } catch (IllegalAccessException | InvocationTargetException | IOException e) {
                     e.printStackTrace();
