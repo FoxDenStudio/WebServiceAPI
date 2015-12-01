@@ -39,11 +39,17 @@ public class FileWebResponse implements IWebServiceResponse {
         }
     }
 
+    /**
+     * @return A string like plain/text that is the content type.  Is retrieved automatically based on file extension.
+     */
     @Override
     public String mimeType() {
         return mimeType;
     }
 
+    /**
+     * @return A byte array that will be written out to the clients stream. In the case, the file data.
+     */
     @Override
     public byte[] getByteData() {
         return byteData;

@@ -19,13 +19,27 @@ import static net.foxdenstudio.webserviceapi.Constants.DEFAULT_INDEX;
  */
 public class ClientConnectionThreadOverride extends ClientConnectionThread {
 
+    /**
+     * An instance of the main plugin class.  Allows for access to non-static methods and variables.
+     */
     WSAPIMainClass wsapiMainClassInstance;
 
+    /**
+     * A version of the ClientConnectionThread object modified slightly to fit the needs of this plugin.
+     *
+     * @param clientSocket           Socket - An instance of a socket that the client connected with.
+     * @param wsapiMainClassInstance WSAPIMainClass - An instance of the plugin, allows for non-static access to methods.
+     * @param serverText             String - Server name... Not in use.
+     */
     public ClientConnectionThreadOverride(Socket clientSocket, WSAPIMainClass wsapiMainClassInstance, String serverText) {
         super(clientSocket, serverText);
         this.wsapiMainClassInstance = wsapiMainClassInstance;
     }
 
+    /**
+     * When called will proccess client requests.
+     * Directly overrides the ClientConnectionThread start.
+     */
     @Override
     public void run() {
         try {

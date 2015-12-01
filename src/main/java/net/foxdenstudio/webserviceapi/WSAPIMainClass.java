@@ -18,7 +18,6 @@ import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginManager;
 import org.spongepowered.api.service.ProviderExistsException;
-import org.spongepowered.api.service.scheduler.Task;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -42,14 +41,25 @@ public class WSAPIMainClass {
     @Inject
     private PluginManager pluginManager;
 
+    /**
+     * HashMap that has a key value correlation in regards to the registered plugins' name, and all the annotated methods for that plugin.
+     */
     HashMap<String, HashMap<String, RequestHandlerData>> pluginAndPathRegistry = new HashMap<>();
 
+    /**
+     * An object that stores the NovaServer override.
+     * The NovaServerOverride extneds NovaServer, but customized to the need of this plugin
+     */
     NovaServerOverride novaServer;
 
+    /**
+     * A threadsafe queue that contains all requests made to the webserver.
+     */
     public static final BlockingQueue<Runnable> requestQueue = new LinkedBlockingQueue<>();
 
     @Listener
     public void onGamePreInitializationEvent(GamePreInitializationEvent event) {
+
         if (game.getPlatform().getType() == Platform.Type.SERVER) {
             try {
                 game.getServiceManager().setProvider(this, IRegistrationService.class, new SimpleRegistrationService());
@@ -85,6 +95,14 @@ public class WSAPIMainClass {
     }
 
 
+    /**
+     * This method is used to register plugins.  Should only ever be called via the Service interface.
+     * <h2>SHOULD NOT BE CALLED BY ANYTHING OTHER THAN WSAPI CLASSES</h2>
+     *
+     * @param pluginID          A string that represents the unique id for the plugin.
+     * @param pluginWebPath     A string that contains the root path for the plugins web pages.
+     * @param classesToRegister Instances of classes that contain the @RequestHandler methods.
+     */
     public void registerPlugin(String pluginID, String pluginWebPath, Object... classesToRegister) {
         HashMap<String, RequestHandlerData> tempHashMap = new HashMap<>();
         for (Object object : classesToRegister) {
@@ -104,6 +122,16 @@ public class WSAPIMainClass {
         logger.debug("WebData:" + pluginAndPathRegistry);
     }
 
+
+    /**
+     * This method is what handles calling the proper method from the plugins.
+     * Should only ever be called by the NovaServer+Overrides.
+     *
+     * @param clientConnectionThread The ClientConnectionThreadOverride instance that the request was made from.
+     * @param path                   The String representation of the plugins path
+     * @param path2                  The String representation of the file/item path.
+     * @param serviceRequest         A IWebService request containing the query and other data.  Will be passed to method.
+     */
     public void loadPage(ClientConnectionThreadOverride clientConnectionThread, String path, String path2, IWebServiceRequest serviceRequest) {
 
         if (path.equalsIgnoreCase("DEFPLUG") && path2.equalsIgnoreCase("home")) {

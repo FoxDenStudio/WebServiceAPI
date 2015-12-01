@@ -16,14 +16,28 @@ import static net.foxdenstudio.webserviceapi.Constants.SERVER_PORT;
  * Created by Joshua Freedman on 11/29/2015.
  * Project: SpongeForge->FDS-WSAPI
  */
-public class NovaServerOverride extends NovaServer{
+public class NovaServerOverride extends NovaServer {
+
+    /**
+     * An instance of the main plugin class.  Allows for access to non-static methods and variables.
+     */
     WSAPIMainClass wsapiMainClassInstance;
 
+    /**
+     * A version of the NovaServer object modified slightly to fit the needs of this plugin.
+     *
+     * @param logger         NovaLogger - An instance of a nova server logger.
+     * @param wsapiMainClass WSAPIMainClass - An instance of the plugin, allows for non-static access to methods.
+     */
     public NovaServerOverride(NovaLogger logger, WSAPIMainClass wsapiMainClass) {
         super(logger);
         wsapiMainClassInstance = wsapiMainClass;
     }
 
+    /**
+     * When called will start the NovaServer.
+     * Directly overrides the NovaServer start.
+     */
     @Override
     public void start() {
         synchronized (this) {

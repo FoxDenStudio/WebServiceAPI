@@ -23,6 +23,9 @@ public class RedirectWebResponse implements IWebServiceResponse {
         data = "<head><meta http-equiv='refresh' content='" + redirectTime + "; url=" + passTarget.toExternalForm() + "'></head><body><h2>Redirect</h2>You will be redirected to " + passTarget.toExternalForm() + " in 3 seconds.<br />If the page does not automatically reload, please click <a href='" + passTarget.toExternalForm() + "'>HERE</a>.<br /><br />" + customMessage + "</body>";
     }
 
+    /**
+     * @return A byte array created from a redirect request that is passed on to the client.
+     */
     @Override
     public byte[] getByteData() {
         return data.getBytes();

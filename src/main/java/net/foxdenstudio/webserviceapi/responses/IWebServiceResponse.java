@@ -11,8 +11,14 @@ import java.io.InputStream;
  */
 public interface IWebServiceResponse {
 
+    /**
+     * @return A byte array that will be written out to the clients stream.
+     */
     byte[] getByteData();
 
+    /**
+     * @return A string like plain/text that is the content type.  If the plugin is a dependency, you can use the Mimes.getMime(".{fileext}")
+     */
     default String mimeType() {
         return Mimes.getMimes(".html");
     }

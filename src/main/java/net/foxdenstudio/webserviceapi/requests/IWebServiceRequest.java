@@ -8,6 +8,12 @@ import java.util.HashMap;
  */
 public interface IWebServiceRequest {
 
+    /**
+     * A Map of key->value data corresponding to query data (like GET)
+     * {something}/index?hello=test  would return a map containing hello -> test
+     *
+     * @return A HashMap<String, String> that contains query data.
+     */
     HashMap<String, String> queryData();
 
 }
