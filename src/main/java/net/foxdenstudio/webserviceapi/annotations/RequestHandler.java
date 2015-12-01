@@ -15,7 +15,7 @@
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
  *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
 
 /**
  * Created by Joshua Freedman on 11/29/2015.
- * Project: SpongeForge | FDSFDS-WSAPI
+ * Project: SpongeForge | FDS-WSAPI
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
@@ -40,7 +40,7 @@ public @interface RequestHandler {
 
     /**
      * The url of the page.
-     * Ex. http://{host}:{port}/{pluginpath}/{NAME/THIS}
+     * Ex. http://{host}:{port}/{pluginPath}/{NAME/THIS}
      *
      * @return String - Page access url.
      */
@@ -54,12 +54,13 @@ public @interface RequestHandler {
 
 
     /**
-     * an Enum of the possible seperate types of expected content, will add more at a later date.  This will eventually allow for different methods to handle the same url but with different data types.
+     * an Enum of the possible separate types of expected content, will add more at a later date.  This will eventually allow for different methods to handle the same url but with different data types.
      */
+    @SuppressWarnings("unused")
     enum RequestType {
         AUDIO("An Audio file/stream"), VIDEO("A Video file/stream"), IMAGE("An image file"), CONTENT("Any web content - HTML, JAVASCRIPT, CSS, etc."), OTHER("Anything else...");
 
-        private String helpData;
+        private final String helpData;
 
         RequestType(String helpData) {
             this.helpData = helpData;

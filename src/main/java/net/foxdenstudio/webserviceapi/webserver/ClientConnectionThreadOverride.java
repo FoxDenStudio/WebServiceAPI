@@ -15,7 +15,7 @@
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
  *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -25,11 +25,8 @@
 
 package net.foxdenstudio.webserviceapi.webserver;
 
-import com.google.inject.Inject;
 import net.foxdenstudio.webserviceapi.WSAPIMainClass;
 import net.foxdenstudio.webserviceapi.novacula.server.ClientConnectionThread;
-import net.foxdenstudio.webserviceapi.requests.IWebServiceRequest;
-import org.slf4j.Logger;
 
 import java.io.*;
 import java.net.Socket;
@@ -40,14 +37,15 @@ import static net.foxdenstudio.webserviceapi.Constants.DEFAULT_INDEX;
 
 /**
  * Created by Joshua Freedman on 11/29/2015.
- * Project: SpongeForge | FDSFDS-WSAPI
+ * Project: SpongeForge | FDS-WSAPI
  */
+@SuppressWarnings("SameParameterValue")
 public class ClientConnectionThreadOverride extends ClientConnectionThread {
 
     /**
      * An instance of the main plugin class.  Allows for access to non-static methods and variables.
      */
-    WSAPIMainClass wsapiMainClassInstance;
+    private final WSAPIMainClass wsapiMainClassInstance;
 
     /**
      * A version of the ClientConnectionThread object modified slightly to fit the needs of this plugin.
@@ -62,7 +60,7 @@ public class ClientConnectionThreadOverride extends ClientConnectionThread {
     }
 
     /**
-     * When called will proccess client requests.
+     * When called will process client requests.
      * Directly overrides the ClientConnectionThread start.
      */
     @Override
@@ -75,26 +73,26 @@ public class ClientConnectionThreadOverride extends ClientConnectionThread {
             String tmp = bufferedReader.readLine(); //read from the stream
             if (tmp.isEmpty()) return;
 
-            String tmp2 = new String(tmp);
             int start = 0;
             int end = 0;
-            for (int a = 0; a < tmp2.length(); a++) {
-                if (tmp2.charAt(a) == ' ' && start != 0) {
+            for (int a = 0; a < tmp.length(); a++) {
+                if (tmp.charAt(a) == ' ' && start != 0) {
                     end = a;
                     break;
                 }
-                if (tmp2.charAt(a) == ' ' && start == 0) {
+                if (tmp.charAt(a) == ' ' && start == 0) {
                     start = a;
                 }
             }
 
-            String path = tmp2.substring(start + 2, end);
+            String path = tmp.substring(start + 2, end);
             path = path.trim().equalsIgnoreCase("") ? DEFAULT_INDEX : path;
             String query = path.indexOf('?') > -1 ? path.substring(path.indexOf('?') + 1).trim() : "";
             path = path.indexOf('?') > -1 ? path.substring(0, path.indexOf('?')) : path;
             String pluginName = path.indexOf('/') > -1 ? path.substring(0, path.indexOf('/')).trim() : "DEFPLUG";
             String file = path.indexOf('/') > -1 ? path.substring(path.indexOf('/') + 1).trim() : "home"; //TODO change path so that file checks if not there or ret home
 
+            @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
             HashMap<String, String> tempMap = new HashMap<>();
 
             if (!query.equalsIgnoreCase("")) {
@@ -140,7 +138,7 @@ public class ClientConnectionThreadOverride extends ClientConnectionThread {
         /** Sending a Http Response of type
          *
          * HTTP/1.x 200 OK + crlf
-         * Date : xx/xx/xxxx + crlf
+         * Date : DD/MM/YYYY + crlf
          * Server : serverName + crlf
          * content-length : X bytes + crlf
          * content-type : mime type + crlf

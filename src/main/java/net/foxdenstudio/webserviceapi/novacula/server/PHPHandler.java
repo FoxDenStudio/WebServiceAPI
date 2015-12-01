@@ -15,7 +15,7 @@
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
  *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -29,32 +29,24 @@ import java.io.*;
 
 /**
  * Created by Joshua Freedman on 11/29/2015.
- * Project: SpongeForge | FDSFDS-WSAPI
+ * Project: SpongeForge | FDS-WSAPI
  */
 public class PHPHandler {
 
     /* Method isCGIProg test if the file is a cgi program **/
     public static boolean isCGIProg(String fileName) {
 
-        int fileExtensionPosition = (int) fileName.lastIndexOf(".");
+        int fileExtensionPosition = fileName.lastIndexOf(".");
 
-        if (fileName.substring(fileExtensionPosition + 1, fileName.length()).equals("exe")) {
-            return true;
-        } else {
-            return false;
-        }
+        return fileName.substring(fileExtensionPosition + 1, fileName.length()).equals("exe");
     }
 
     /* Method isPHPProg test if the file is a PHP Script **/
     public static boolean isPHPProg(String fileName) {
 
-        int fileExtensionPosition = (int) fileName.lastIndexOf(".");
+        int fileExtensionPosition = fileName.lastIndexOf(".");
 
-        if (fileName.substring(fileExtensionPosition + 1, fileName.length()).equals("php"))
-
-            return true;
-        else
-            return false;
+        return fileName.substring(fileExtensionPosition + 1, fileName.length()).equals("php");
 
     }
 

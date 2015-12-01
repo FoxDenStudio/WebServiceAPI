@@ -15,7 +15,7 @@
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
  *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -29,7 +29,7 @@ import java.io.File;
 
 /**
  * Created by Joshua Freedman on 11/29/2015.
- * Project: SpongeForge | FDSFDS-WSAPI
+ * Project: SpongeForge | FDS-WSAPI
  */
 public class NovaInfo {
 
@@ -38,9 +38,9 @@ public class NovaInfo {
         long totalMemory = Runtime.getRuntime().maxMemory();
         String maxMemory = "[+] Maximum memory: " + (totalMemory == Long.MAX_VALUE ? "no limit" : totalMemory);
         String freeMemory = "[+] Free memory: " + Runtime.getRuntime().freeMemory();
-        String availibleMemory = "[+] Total memory available to JVM: " + Runtime.getRuntime().totalMemory();
+        String availableMemory = "[+] Total memory available to JVM: " + Runtime.getRuntime().totalMemory();
 
-        return NovaLogger.ANSI_GREEN + "The Server has...\n" + NovaLogger.ANSI_CYAN + "\t" + processors + " cores.\n\t" + maxMemory + " Bytes.\n\t" + freeMemory + " Bytes.\n\t" + availibleMemory + " Bytes\n";
+        return NovaLogger.ANSI_GREEN + "The Server has...\n" + NovaLogger.ANSI_CYAN + "\t" + processors + " cores.\n\t" + maxMemory + " Bytes.\n\t" + freeMemory + " Bytes.\n\t" + availableMemory + " Bytes\n";
     }
 
     public static String getFileInfo() {

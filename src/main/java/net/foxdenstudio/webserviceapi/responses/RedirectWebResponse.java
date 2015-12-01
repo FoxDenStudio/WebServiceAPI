@@ -15,7 +15,7 @@
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
  *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -29,21 +29,24 @@ import java.net.URL;
 
 /**
  * Created by Joshua Freedman on 11/29/2015.
- * Project: SpongeForge | FDSFDS-WSAPI
+ * Project: SpongeForge | FDS-WSAPI
  */
+@SuppressWarnings("SameParameterValue")
 public class RedirectWebResponse implements IWebServiceResponse {
 
 
-    private String data;
+    private final String data;
 
     public RedirectWebResponse(URL passTarget) {
         this(passTarget, 3);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public RedirectWebResponse(URL passTarget, Integer redirectTime) {
         this(passTarget, redirectTime, "");
     }
 
+    @SuppressWarnings("WeakerAccess")
     public RedirectWebResponse(URL passTarget, Integer redirectTime, String customMessage) {
         data = "<head><meta http-equiv='refresh' content='" + redirectTime + "; url=" + passTarget.toExternalForm() + "'></head><body><h2>Redirect</h2>You will be redirected to " + passTarget.toExternalForm() + " in 3 seconds.<br />If the page does not automatically reload, please click <a href='" + passTarget.toExternalForm() + "'>HERE</a>.<br /><br />" + customMessage + "</body>";
     }

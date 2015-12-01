@@ -15,7 +15,7 @@
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
  *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -26,7 +26,6 @@
 package net.foxdenstudio.webserviceapi.webserver;
 
 import net.foxdenstudio.webserviceapi.WSAPIMainClass;
-import net.foxdenstudio.webserviceapi.novacula.server.ClientConnectionThread;
 import net.foxdenstudio.webserviceapi.novacula.server.NovaServer;
 import net.foxdenstudio.webserviceapi.novacula.utils.NovaInfo;
 import net.foxdenstudio.webserviceapi.novacula.utils.NovaLogger;
@@ -39,14 +38,14 @@ import static net.foxdenstudio.webserviceapi.Constants.SERVER_PORT;
 
 /**
  * Created by Joshua Freedman on 11/29/2015.
- * Project: SpongeForge | FDSFDS-WSAPI
+ * Project: SpongeForge | FDS-WSAPI
  */
 public class NovaServerOverride extends NovaServer {
 
     /**
      * An instance of the main plugin class.  Allows for access to non-static methods and variables.
      */
-    WSAPIMainClass wsapiMainClassInstance;
+    private final WSAPIMainClass wsapiMainClassInstance;
 
     /**
      * A version of the NovaServer object modified slightly to fit the needs of this plugin.
@@ -84,7 +83,7 @@ public class NovaServerOverride extends NovaServer {
 
         if (serverSocket != null) {
             while (!isStopped()) {
-                Socket clientSocket = null;
+                Socket clientSocket;
                 try {
                     clientSocket = this.serverSocket.accept();
                 } catch (IOException e) {
@@ -95,7 +94,7 @@ public class NovaServerOverride extends NovaServer {
                     throw new RuntimeException("Error accepting client connection", e);
                 }
                 new Thread(
-                        new ClientConnectionThreadOverride(clientSocket, wsapiMainClassInstance, "Multithreaded Server")
+                        new ClientConnectionThreadOverride(clientSocket, wsapiMainClassInstance, WSAPIMainClass.class.getSimpleName() + " - Multithreaded Server")
                 ).start();
             }
         }

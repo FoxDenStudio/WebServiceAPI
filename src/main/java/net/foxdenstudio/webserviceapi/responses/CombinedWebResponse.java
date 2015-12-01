@@ -15,7 +15,7 @@
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
  *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -26,8 +26,7 @@
 package net.foxdenstudio.webserviceapi.responses;
 
 import java.io.ByteArrayOutputStream;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,10 +34,11 @@ import java.util.List;
  * Created by Joshua Freedman on 11/30/2015.
  * Project: SpongeForge | FDS-WSAPI
  */
+@SuppressWarnings("unused")
 public class CombinedWebResponse implements IWebServiceResponse {
 
 
-    LinkedList<IWebServiceResponse> responseList;
+    private LinkedList<IWebServiceResponse> responseList;
 
     public CombinedWebResponse() {
         this(new LinkedList<>());
@@ -59,17 +59,17 @@ public class CombinedWebResponse implements IWebServiceResponse {
         return this;
     }
 
-    public CombinedWebResponse addResponse(Integer index, IWebServiceResponse response) {
+    public CombinedWebResponse addResponse(int index, IWebServiceResponse response) {
         responseList.add(index, response);
         return this;
     }
 
-    public CombinedWebResponse removeResponse(Integer index) {
+    public CombinedWebResponse removeResponse(int index) {
         responseList.remove(index);
         return this;
     }
 
-    public Integer getSize() {
+    public int getSize() {
         return responseList.size();
     }
 
@@ -91,18 +91,22 @@ public class CombinedWebResponse implements IWebServiceResponse {
         return concatenateByteArrays(list);
     }
 
-    public byte[] concatenateByteArrays(List<byte[]> blocks) {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        for (byte[] b : blocks) {
-            os.write(b, 0, b.length);
+    private byte[] concatenateByteArrays(List<byte[]> blocks) {
+        try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+            for (byte[] b : blocks) {
+                os.write(b, 0, b.length);
+            }
+            return os.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new byte[0];
         }
-        return os.toByteArray();
     }
 
     //TODO Add Mime Priorities....
 
     /**
-     * @return A string like plain/text that is the content type.  If the plugin is a dependency, you can use the Mimes.getMime(".{fileext}")
+     * @return A string like plain/text that is the content type.  If the plugin is a dependency, you can use the Mimes.getMime(".{fileExt}")
      */
     @Override
     public String mimeType() {

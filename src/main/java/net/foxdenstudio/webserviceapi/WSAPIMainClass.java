@@ -15,7 +15,7 @@
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
  *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -54,7 +54,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Joshua Freedman on 11/29/2015.
- * Project: SpongeForge | FDSFDS-WSAPI
+ * Project: SpongeForge | FDS-WSAPI
  */
 @Plugin(name = "FoxDenStudio - WSAPI", id = "fds-wsapi")
 public class WSAPIMainClass {
@@ -69,16 +69,16 @@ public class WSAPIMainClass {
     /**
      * HashMap that has a key value correlation in regards to the registered plugins' name, and all the annotated methods for that plugin.
      */
-    HashMap<String, HashMap<String, RequestHandlerData>> pluginAndPathRegistry = new HashMap<>();
+    private final HashMap<String, HashMap<String, RequestHandlerData>> pluginAndPathRegistry = new HashMap<>();
 
     /**
      * An object that stores the NovaServer override.
-     * The NovaServerOverride extneds NovaServer, but customized to the need of this plugin
+     * The NovaServerOverride extends NovaServer, but customized to the need of this plugin
      */
-    NovaServerOverride novaServer;
+    private NovaServerOverride novaServer;
 
     /**
-     * A threadsafe queue that contains all requests made to the webserver.
+     * A threadsafe queue that contains all requests made to the web-server.
      */
     public static final BlockingQueue<Runnable> requestQueue = new LinkedBlockingQueue<>();
 
@@ -114,7 +114,7 @@ public class WSAPIMainClass {
     public void onGameServerStoppingEvent(GameStoppingEvent event) {
         if (game.getPlatform().getType() == Platform.Type.SERVER) {
             novaServer.stop();
-            novaServer.getLogger().saveLog();
+            logger.debug("Log Saved: " + novaServer.getLogger().saveLog());
         }
     }
 
@@ -128,6 +128,8 @@ public class WSAPIMainClass {
      * @param classesToRegister Instances of classes that contain the @RequestHandler methods.
      */
     public void registerPlugin(String pluginID, String pluginWebPath, Object... classesToRegister) {
+
+        logger.debug("Loading plugin: " + pluginID);
 
         HashMap<String, RequestHandlerData> tempHashMap = new HashMap<>();
         for (Object object : classesToRegister) {
@@ -185,6 +187,11 @@ public class WSAPIMainClass {
             if (dataHashMap.containsKey(path2)) {
 
                 RequestHandlerData requestHandlerData = dataHashMap.get(path2);
+
+                //noinspection StatementWithEmptyBody
+                if (requestHandlerData.getRequestType() == serviceRequest.getExpectedType()) {
+                    //TODO make safety for expected content types...
+                }
 
                 try {
                     Object object = requestHandlerData.getMethod().invoke(requestHandlerData.getClassInstance(), serviceRequest);
