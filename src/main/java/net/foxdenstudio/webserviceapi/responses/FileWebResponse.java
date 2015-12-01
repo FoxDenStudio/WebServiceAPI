@@ -10,7 +10,7 @@ import java.io.InputStream;
 
 /**
  * Created by Joshua Freedman on 11/29/2015.
- * Project: SpongeForge->FDS-WSAPI
+ * Project: SpongeForge | FDSFDS-WSAPI
  */
 public class FileWebResponse implements IWebServiceResponse {
 

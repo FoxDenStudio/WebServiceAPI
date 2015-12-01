@@ -2,7 +2,7 @@ package net.foxdenstudio.webserviceapi.novacula.server;
 
 /**
  * Created by Joshua Freedman on 11/29/2015.
- * Project: SpongeForge->FDS-WSAPI
+ * Project: SpongeForge | FDSFDS-WSAPI
  */
 public abstract class Mimes {
     private static int fileExtensionPosition; //contain the file extension position in the file name
