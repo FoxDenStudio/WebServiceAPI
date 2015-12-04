@@ -29,7 +29,6 @@ import com.google.inject.Inject;
 import net.foxdenstudio.webserviceapi.annotations.RequestHandler;
 import net.foxdenstudio.webserviceapi.novacula.utils.NovaLogger;
 import net.foxdenstudio.webserviceapi.requests.IWebServiceRequest;
-import net.foxdenstudio.webserviceapi.responses.FileWebResponse;
 import net.foxdenstudio.webserviceapi.responses.IWebServiceResponse;
 import net.foxdenstudio.webserviceapi.webserver.ClientConnectionThreadOverride;
 import net.foxdenstudio.webserviceapi.webserver.NovaServerOverride;
@@ -94,11 +93,12 @@ public class WSAPIMainClass {
 
             game.getScheduler().createTaskBuilder().execute((task) -> {
                 try {
-                    requestQueue.take().run();
+                    if (!requestQueue.isEmpty())
+                        requestQueue.take().run();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }).name("FDS-WSAPI - CheckRequestsTask").delayTicks(10).interval(1, TimeUnit.MILLISECONDS).submit(this);
+            }).name("FDS-WSAPI - CheckRequestsTask").delayTicks(50).interval(1, TimeUnit.MILLISECONDS).submit(this);
         }
     }
 
@@ -164,21 +164,21 @@ public class WSAPIMainClass {
 
         if (path.equalsIgnoreCase("DEFPLUG") && path2.equalsIgnoreCase("home")) {
 
-            try {
-                ClassLoader classLoader = getClass().getClassLoader();
-                IWebServiceResponse serviceResponse = new FileWebResponse(classLoader.getResourceAsStream("BaseDoc.html"));
+//                try {
+//                ClassLoader classLoader = getClass().getClassLoader();
+//                IWebServiceResponse serviceResponse = new FileWebResponse(classLoader.getResourceAsStream("BaseDoc.html"));
+//
+//                clientConnectionThread.sendHTTPResponseOK(clientConnectionThread.getSocket().getOutputStream(), serviceResponse.mimeType());
+//
+//                for (int i = 0; i < serviceResponse.getByteData().length; i++) {
+//                    clientConnectionThread.getSocket().getOutputStream().write(serviceResponse.getByteData()[i]);
+//                    clientConnectionThread.getSocket().getOutputStream().flush();
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
-                clientConnectionThread.sendHTTPResponseOK(clientConnectionThread.getSocket().getOutputStream(), serviceResponse.mimeType());
-
-                for (int i = 0; i < serviceResponse.getByteData().length; i++) {
-                    clientConnectionThread.getSocket().getOutputStream().write(serviceResponse.getByteData()[i]);
-                    clientConnectionThread.getSocket().getOutputStream().flush();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return;
+//            return;
         }
 
         if (pluginAndPathRegistry.containsKey(path)) {
