@@ -1,7 +1,41 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name 'Sponge maven repo'
+            url 'http://repo.spongepowered.org/maven'
+        }
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+        classpath 'org.spongepowered:spongegradle:0.5.1'
+    }
+}
+
 group 'net.foxdenstudio'
 version '1.0-SNAPSHOT'
 
+apply plugin: 'org.spongepowered.plugin'
 apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+if (System.env.TRAVIS) {
+    String tempVersion = ''
+    if (System.env.TRAVIS_TAG) {
+        tempVersion = System.env.TRAVIS_TAG;
+        if(tempVersion.startsWith("v")){
+            tempVersion = tempVersion.substring(1)
+        }
+        tempVersion += "-$System.env.TRAVIS_BUILD_NUMBER"
+    } else {
+        tempVersion = version + "-$System.env.TRAVIS_BUILD_NUMBER-SNAPSHOT"
+    }
+    version tempVersion
+}
+
+sponge.plugin {
+    id = 'foxguard'
+}
 
 sourceCompatibility = 1.8
 
@@ -18,5 +52,15 @@ ext.spongeVersion = "4.1.0-SNAPSHOT"
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile "org.spongepowered:spongeapi:$spongeVersion"
+}
 
+shadowJar {
+    classifier = ''
+//    dependencies {
+//        include dependency('net.minecrell.mcstats:statslite-sponge')
+//    }
+}
+
+artifacts {
+    archives shadowJar
 }
