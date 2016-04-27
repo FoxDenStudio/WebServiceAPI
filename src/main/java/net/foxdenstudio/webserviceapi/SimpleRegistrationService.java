@@ -45,7 +45,7 @@ public class SimpleRegistrationService implements IRegistrationService {
      */
     @Override
     public void registerPlugin(PluginManager pluginManager, String pluginID, String pluginWebPath, Object... classesToRegister) {
-        WSAPIMainClass mainClass = (WSAPIMainClass) pluginManager.getPlugin("fds-wsapi").get().getInstance();
+        WSAPIMainClass mainClass = (WSAPIMainClass) pluginManager.getPlugin("fds-wsapi").get().getInstance().get();
         mainClass.registerPlugin(pluginID, pluginWebPath, classesToRegister);
     }
 }

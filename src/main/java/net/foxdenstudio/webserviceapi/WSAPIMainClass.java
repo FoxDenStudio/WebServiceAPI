@@ -41,7 +41,6 @@ import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginManager;
-import org.spongepowered.api.service.ProviderExistsException;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -58,28 +57,25 @@ import java.util.concurrent.TimeUnit;
 @Plugin(name = "FoxDenStudio - WSAPI", id = "fds-wsapi")
 public class WSAPIMainClass {
 
+    /**
+     * A threadsafe queue that contains all requests made to the web-server.
+     */
+    public static final BlockingQueue<Runnable> requestQueue = new LinkedBlockingQueue<>();
+    /**
+     * HashMap that has a key value correlation in regards to the registered plugins' name, and all the annotated methods for that plugin.
+     */
+    private final HashMap<String, HashMap<String, RequestHandlerData>> pluginAndPathRegistry = new HashMap<>();
     @Inject
     private Game game;
     @Inject
     private Logger logger;
     @Inject
     private PluginManager pluginManager;
-
-    /**
-     * HashMap that has a key value correlation in regards to the registered plugins' name, and all the annotated methods for that plugin.
-     */
-    private final HashMap<String, HashMap<String, RequestHandlerData>> pluginAndPathRegistry = new HashMap<>();
-
     /**
      * An object that stores the NovaServer override.
      * The NovaServerOverride extends NovaServer, but customized to the need of this plugin
      */
     private NovaServerOverride novaServer;
-
-    /**
-     * A threadsafe queue that contains all requests made to the web-server.
-     */
-    public static final BlockingQueue<Runnable> requestQueue = new LinkedBlockingQueue<>();
 
     @Listener
     public void onGamePreInitializationEvent(GamePreInitializationEvent event) {
@@ -87,7 +83,7 @@ public class WSAPIMainClass {
 
             try {
                 game.getServiceManager().setProvider(this, IRegistrationService.class, new SimpleRegistrationService());
-            } catch (ProviderExistsException e) {
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
 
