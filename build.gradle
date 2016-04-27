@@ -56,11 +56,12 @@ dependencies {
 
 shadowJar {
     classifier = ''
-//    dependencies {
-//        include dependency('net.minecrell.mcstats:statslite-sponge')
-//    }
 }
 
 artifacts {
     archives shadowJar
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.11'
 }

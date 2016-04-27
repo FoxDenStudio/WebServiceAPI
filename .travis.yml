@@ -1,16 +1,21 @@
 sudo: required
 dist: trusty
 language: java
+
+
+git:
+  submodules: false
+before_install: git submodule update --init --recursive
+
 jdk:
 - openjdk8
 - oraclejdk8
 env: GRADLE_OPTS="-Xms1g -Xmx3g"
-script: gradle build
+
+
+script: ./gradlew build
 notifications:
   email: false
-
-after_success:
-  - for f in "./build/libs/fds-wsapi*.jar"; do mv ${f} "./build/libs/fds-wsapi-${TRAVIS_TAG}-${TRAVIS_BUILD_NUMBER}-SNAPSHOT.jar"; done
 
 deploy:
   file_glob: true
