@@ -18,7 +18,7 @@ import org.spongepowered.api.plugin.PluginManager;
 import java.io.File;
 import java.util.Map;
 
-@Plugin(id = "fds-wsapi-test", name = "FoxDenStudio - WSAPI - Test", dependencies = @Dependency(id = "fds-wsapi"))
+@Plugin(id = "foxdenstudio.wsapi-test", name = "FoxDenStudio - WSAPI - Test", version = "0.2-BETA", dependencies = @Dependency(id = "foxdenstudio.wsapi"))
 public class TestMainClass {
 
     @Inject

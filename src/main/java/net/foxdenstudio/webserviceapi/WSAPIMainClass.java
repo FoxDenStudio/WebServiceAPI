@@ -37,7 +37,6 @@ import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginManager;
 
-import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -46,7 +45,7 @@ import java.util.concurrent.TimeUnit;
  * Created by Joshua Freedman on 11/29/2015.
  * Project: SpongeForge | FDS-WSAPI
  */
-@Plugin(name = "FoxDenStudio - WSAPI", id = "fds-wsapi")
+@Plugin(name = "FoxDenStudio - WSAPI", id = "foxdenstudio.wsapi", version = "0.2-BETA")
 public class WSAPIMainClass {
 
     /**
