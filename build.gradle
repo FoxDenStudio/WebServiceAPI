@@ -34,7 +34,7 @@ if (System.env.TRAVIS) {
 }
 
 sponge.plugin {
-    id = 'foxguard'
+    id = 'fds-wsapi'
 }
 
 sourceCompatibility = 1.8
