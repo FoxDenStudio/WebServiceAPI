@@ -25,8 +25,11 @@
 
 package net.foxdenstudio.webserviceapi.responses;
 
+import net.foxdenstudio.webserviceapi.server.HTTPHeaderParser;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -111,5 +114,14 @@ public class CombinedWebResponse implements IWebServiceResponse {
     @Override
     public String mimeType() {
         return null;
+    }
+
+    @Override
+    public void handle(HTTPHeaderParser httpHeaderParser, Socket socket, List<String> strings) {
+        try {
+            socket.getOutputStream().write(getByteData());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

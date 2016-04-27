@@ -26,12 +26,15 @@
 package net.foxdenstudio.webserviceapi.responses;
 
 import com.google.common.io.ByteStreams;
-import net.foxdenstudio.webserviceapi.novacula.server.Mimes;
+import net.foxdenstudio.webserviceapi.server.HTTPHeaderParser;
+import net.foxdenstudio.webserviceapi.util.Mimes;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Socket;
+import java.util.List;
 
 /**
  * Created by Joshua Freedman on 11/29/2015.
@@ -42,12 +45,14 @@ public class FileWebResponse implements IWebServiceResponse {
     private byte[] byteData = new byte[1024];
     private String mimeType;
 
-    public FileWebResponse(File page) throws IOException {
+    public FileWebResponse(File page) {
         try (FileInputStream fileInputStream = new FileInputStream(page)) {
             byteData = new byte[(int) page.length()];
 
             //noinspection ResultOfMethodCallIgnored
             fileInputStream.read(byteData);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         mimeType = Mimes.getMimes(page.getName());
     }
@@ -79,5 +84,13 @@ public class FileWebResponse implements IWebServiceResponse {
     @Override
     public byte[] getByteData() {
         return byteData;
+    }
+
+    public void handle(HTTPHeaderParser httpHeaderParser, Socket socket, List<String> strings) {
+        try {
+            socket.getOutputStream().write(getByteData());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

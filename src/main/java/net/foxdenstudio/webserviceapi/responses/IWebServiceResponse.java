@@ -25,7 +25,11 @@
 
 package net.foxdenstudio.webserviceapi.responses;
 
-import net.foxdenstudio.webserviceapi.novacula.server.Mimes;
+
+import net.foxdenstudio.webserviceapi.server.HTTPHeaderParser;
+
+import java.net.Socket;
+import java.util.List;
 
 /**
  * Created by Joshua Freedman on 11/29/2015.
@@ -33,15 +37,14 @@ import net.foxdenstudio.webserviceapi.novacula.server.Mimes;
  */
 public interface IWebServiceResponse {
 
-    /**
-     * @return A byte array that will be written out to the clients stream.
-     */
+    void handle(HTTPHeaderParser httpHeaderParser, Socket socket, List<String> strings);
+
     byte[] getByteData();
 
     /**
      * @return A string like plain/text that is the content type.  If the plugin is a dependency, you can use the Mimes.getMime(".{fileExt}")
      */
     default String mimeType() {
-        return Mimes.getMimes(".html");
+        return "text/html";
     }
 }
